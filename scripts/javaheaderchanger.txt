@@ -1,0 +1,9 @@
+/*
+    Foilen Infra Resource ApachePhp
+    https://github.com/foilen/foilen-infra-resource-apachephp
+    Copyright (c) 2018 Foilen (http://foilen.com)
+
+    The MIT License
+    http://opensource.org/licenses/MIT
+
+ */

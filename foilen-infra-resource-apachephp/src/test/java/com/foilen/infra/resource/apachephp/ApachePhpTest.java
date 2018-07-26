@@ -17,9 +17,6 @@ import com.foilen.infra.plugin.core.system.fake.junits.AbstractIPPluginTest;
 import com.foilen.infra.plugin.core.system.junits.JunitsHelper;
 import com.foilen.infra.plugin.v1.core.context.ChangesContext;
 import com.foilen.infra.plugin.v1.model.resource.LinkTypeConstants;
-import com.foilen.infra.resource.apachephp.ApachePhp;
-import com.foilen.infra.resource.apachephp.ApachePhpEditor;
-import com.foilen.infra.resource.apachephp.ApachePhpFolder;
 import com.foilen.infra.resource.machine.Machine;
 import com.foilen.infra.resource.unixuser.UnixUser;
 import com.foilen.infra.resource.website.Website;
@@ -31,7 +28,7 @@ public class ApachePhpTest extends AbstractIPPluginTest {
 
         // Create resources
         Machine machine = new Machine("h1.example.com", "192.168.0.200");
-        UnixUser unixUser = new UnixUser(2000, "myphp", "/home/myphp", null, null);
+        UnixUser unixUser = new UnixUser(2000L, "myphp", "/home/myphp", null, null);
         Website website = new Website("myphp");
         website.setDomainNames(Collections.singleton("myphp.example.com"));
 
@@ -64,7 +61,7 @@ public class ApachePhpTest extends AbstractIPPluginTest {
 
         // Create resources
         Machine machine = new Machine("h1.example.com", "192.168.0.200");
-        UnixUser unixUser = new UnixUser(2000, "myphp", "/home/myphp", null, null);
+        UnixUser unixUser = new UnixUser(2000L, "myphp", "/home/myphp", null, null);
         Website website = new Website("myphp");
         website.setDomainNames(Collections.singleton("myphp.example.com"));
 

@@ -28,6 +28,7 @@ import com.foilen.infra.plugin.v1.model.docker.DockerContainerEndpoints;
 import com.foilen.infra.plugin.v1.model.resource.LinkTypeConstants;
 import com.foilen.infra.resource.application.Application;
 import com.foilen.infra.resource.composableapplication.AttachablePart;
+import com.foilen.infra.resource.composableapplication.AttachablePartContext;
 import com.foilen.infra.resource.machine.Machine;
 import com.foilen.infra.resource.unixuser.UnixUser;
 import com.foilen.infra.resource.website.Website;
@@ -145,7 +146,7 @@ public class ApachePhpEventHandler extends AbstractFinalStateManagedResourcesEve
                     .sorted((a, b) -> a.getResourceName().compareTo(b.getResourceName())) //
                     .forEach(attachedPart -> {
                         logger.debug("Attaching {} with type {}", attachedPart.getResourceName(), attachedPart.getClass().getName());
-                        attachedPart.attachTo(services, null, null, application, applicationDefinition);
+                        attachedPart.attachTo(new AttachablePartContext().setServices(services).setApplication(application).setApplicationDefinition(applicationDefinition));
                     });
 
         }

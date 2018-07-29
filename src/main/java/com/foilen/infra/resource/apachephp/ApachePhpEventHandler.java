@@ -15,13 +15,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.foilen.infra.plugin.v1.core.context.ChangesContext;
 import com.foilen.infra.plugin.v1.core.context.CommonServicesContext;
-import com.foilen.infra.plugin.v1.core.eventhandler.AbstractCommonMethodUpdateEventHandler;
-import com.foilen.infra.plugin.v1.core.eventhandler.CommonMethodUpdateEventHandlerContext;
+import com.foilen.infra.plugin.v1.core.eventhandler.AbstractFinalStateManagedResourcesEventHandler;
+import com.foilen.infra.plugin.v1.core.eventhandler.FinalStateManagedResource;
+import com.foilen.infra.plugin.v1.core.eventhandler.FinalStateManagedResourcesUpdateEventHandlerContext;
 import com.foilen.infra.plugin.v1.core.exception.IllegalUpdateException;
 import com.foilen.infra.plugin.v1.core.service.IPResourceService;
-import com.foilen.infra.plugin.v1.core.visual.helper.CommonResourceLink;
 import com.foilen.infra.plugin.v1.model.base.IPApplicationDefinition;
 import com.foilen.infra.plugin.v1.model.base.IPApplicationDefinitionAssetsBundle;
 import com.foilen.infra.plugin.v1.model.base.IPApplicationDefinitionVolume;
@@ -34,12 +33,10 @@ import com.foilen.infra.resource.unixuser.UnixUser;
 import com.foilen.infra.resource.website.Website;
 import com.foilen.smalltools.tools.FreemarkerTools;
 
-public class ApachePhpEventHandler extends AbstractCommonMethodUpdateEventHandler<ApachePhp> {
+public class ApachePhpEventHandler extends AbstractFinalStateManagedResourcesEventHandler<ApachePhp> {
 
     @Override
-    protected void commonHandlerExecute(CommonServicesContext services, ChangesContext changes, CommonMethodUpdateEventHandlerContext<ApachePhp> context) {
-
-        context.setManagedResourcesUpdateContentIfExists(true);
+    protected void commonHandlerExecute(CommonServicesContext services, FinalStateManagedResourcesUpdateEventHandlerContext<ApachePhp> context) {
 
         context.addManagedResourceTypes(Application.class);
 
@@ -75,7 +72,9 @@ public class ApachePhpEventHandler extends AbstractCommonMethodUpdateEventHandle
 
             // Create an Application
             Application application = new Application();
-            context.addManagedResources(application);
+            FinalStateManagedResource applicationFinalState = new FinalStateManagedResource();
+            applicationFinalState.setManagedResource(application);
+            context.addManagedResources(applicationFinalState);
             application.setName(apachePhp.getName());
             application.setDescription(apachePhp.getResourceDescription());
 
@@ -128,14 +127,17 @@ public class ApachePhpEventHandler extends AbstractCommonMethodUpdateEventHandle
             applicationDefinition.addPortEndpoint(8080, DockerContainerEndpoints.HTTP_TCP);
 
             // Link machines
-            CommonResourceLink.syncToLinks(services, changes, application, LinkTypeConstants.INSTALLED_ON, Machine.class, machines);
+            applicationFinalState.addManagedLinksToType(LinkTypeConstants.INSTALLED_ON);
+            machines.forEach(it -> applicationFinalState.addLinkTo(LinkTypeConstants.INSTALLED_ON, it));
 
             // Link unix user
-            CommonResourceLink.syncToLinks(services, changes, application, LinkTypeConstants.RUN_AS, UnixUser.class, unixUsers);
+            applicationFinalState.addManagedLinksToType(LinkTypeConstants.RUN_AS);
+            unixUsers.forEach(it -> applicationFinalState.addLinkTo(LinkTypeConstants.RUN_AS, it));
 
             // Sync link websites
             List<Website> websitesFrom = resourceService.linkFindAllByFromResourceClassAndLinkTypeAndToResource(Website.class, LinkTypeConstants.POINTS_TO, apachePhp);
-            CommonResourceLink.syncFromLinks(services, changes, Website.class, LinkTypeConstants.POINTS_TO, application, websitesFrom);
+            applicationFinalState.addManagedLinksFromType(LinkTypeConstants.POINTS_TO);
+            websitesFrom.forEach(it -> applicationFinalState.addLinkFrom(it, LinkTypeConstants.POINTS_TO));
 
             // Attach parts in a deterministic order
             logger.debug("attachedParts ; amount {}", attachedParts.size());
@@ -143,7 +145,7 @@ public class ApachePhpEventHandler extends AbstractCommonMethodUpdateEventHandle
                     .sorted((a, b) -> a.getResourceName().compareTo(b.getResourceName())) //
                     .forEach(attachedPart -> {
                         logger.debug("Attaching {} with type {}", attachedPart.getResourceName(), attachedPart.getClass().getName());
-                        attachedPart.attachTo(services, changes, context, application, applicationDefinition);
+                        attachedPart.attachTo(services, null, null, application, applicationDefinition);
                     });
 
         }

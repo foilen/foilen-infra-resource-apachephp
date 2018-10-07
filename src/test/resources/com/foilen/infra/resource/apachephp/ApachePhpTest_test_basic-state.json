@@ -192,6 +192,9 @@ sendmail_path = \"/usr/bin/msmtp -t --read-envelope-from\"
         }, {
           "step" : "chown www-data:www-data /var/run/apache2",
           "type" : "COMMAND"
+        }, {
+          "step" : "/usr/sbin/a2enmod rewrite",
+          "type" : "COMMAND"
         } ],
         "containerUsersToChangeId" : [ {
           "a" : "www-data",

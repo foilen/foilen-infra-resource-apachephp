@@ -125,6 +125,9 @@ public class ApachePhpEventHandler extends AbstractFinalStateManagedResourcesEve
             applicationDefinition.addBuildStepCommand("chown www-data:www-data /var/run/apache2");
             applicationDefinition.addService("apache", "/apache-start.sh");
 
+            // Enable modules
+            applicationDefinition.addBuildStepCommand("/usr/sbin/a2enmod rewrite");
+
             applicationDefinition.addPortEndpoint(8080, DockerContainerEndpoints.HTTP_TCP);
 
             // Link machines

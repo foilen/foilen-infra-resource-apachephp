@@ -39,6 +39,8 @@ import com.foilen.infra.resource.website.Website;
  */
 public class ApachePhp extends AbstractIPResource {
 
+    public static final String RESOURCE_TYPE = "Apache and PHP";
+
     public static final String PROPERTY_NAME = "name";
     public static final String PROPERTY_BASE_PATH = "basePath";
 

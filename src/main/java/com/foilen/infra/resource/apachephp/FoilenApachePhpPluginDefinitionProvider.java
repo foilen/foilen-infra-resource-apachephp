@@ -22,10 +22,10 @@ public class FoilenApachePhpPluginDefinitionProvider implements IPPluginDefiniti
     public IPPluginDefinitionV1 getIPPluginDefinition() {
         IPPluginDefinitionV1 pluginDefinition = new IPPluginDefinitionV1("Foilen", "Apache and PHP", "To create web sites", "1.0.0");
 
-        pluginDefinition.addCustomResource(ApachePhp.class, "Apache and PHP", //
+        pluginDefinition.addCustomResource(ApachePhp.class, ApachePhp.RESOURCE_TYPE, //
                 Arrays.asList(ApachePhp.PROPERTY_NAME), //
                 Collections.emptyList());
-        pluginDefinition.addCustomResource(ApachePhpFolder.class, "Apache and PHP - Folder", true, //
+        pluginDefinition.addCustomResource(ApachePhpFolder.class, ApachePhpFolder.RESOURCE_TYPE, true, //
                 Arrays.asList(ApachePhpFolder.PROPERTY_UID), //
                 Collections.emptyList());
 

@@ -18,6 +18,8 @@ import com.foilen.smalltools.tools.SecureRandomTools;
  */
 public class ApachePhpFolder extends AbstractIPResource {
 
+    public static final String RESOURCE_TYPE = "Apache and PHP - Folder";
+
     public static final String PROPERTY_UID = "uid";
     public static final String PROPERTY_FOLDER = "folder";
     public static final String PROPERTY_ALIAS = "alias";

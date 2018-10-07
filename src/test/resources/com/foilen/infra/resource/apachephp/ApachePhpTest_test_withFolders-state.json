@@ -178,22 +178,24 @@ sendmail_path = \"/usr/bin/msmtp -t --read-envelope-from\"
             "a" : "/etc/apache2/sites-enabled/000-default.conf",
             "b" : "<VirtualHost *>
   DocumentRoot /base
-    
+  
+  SetEnvIf x-forwarded-proto https HTTPS=on
+  
   ErrorLog /var/log/apache2/error.log
   CustomLog /var/log/apache2/access.log combined
-
-   <Directory /base>
+  
+  <Directory /base>
     AllowOverride All
     Require all granted
   </Directory>
   
   Alias /other /folders/_home_myphp_other
-    
-   <Directory /folders/_home_myphp_other>
+  
+  <Directory /folders/_home_myphp_other>
     AllowOverride All
     Require all granted
   </Directory>
-  
+
 </VirtualHost>
 "
           } ]

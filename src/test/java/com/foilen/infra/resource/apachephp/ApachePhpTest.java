@@ -28,7 +28,7 @@ public class ApachePhpTest extends AbstractIPPluginTest {
 
         // Create resources
         Machine machine = new Machine("h1.example.com", "192.168.0.200");
-        UnixUser unixUser = new UnixUser(2000L, "myphp", "/home/myphp", null, null);
+        UnixUser unixUser = new UnixUser(72000L, "myphp", "/home/myphp", null, null);
         Website website = new Website("myphp");
         website.setDomainNames(Collections.singleton("myphp.example.com"));
 
@@ -61,7 +61,7 @@ public class ApachePhpTest extends AbstractIPPluginTest {
 
         // Create resources
         Machine machine = new Machine("h1.example.com", "192.168.0.200");
-        UnixUser unixUser = new UnixUser(2000L, "myphp", "/home/myphp", null, null);
+        UnixUser unixUser = new UnixUser(72000L, "myphp", "/home/myphp", null, null);
         Website website = new Website("myphp");
         website.setDomainNames(Collections.singleton("myphp.example.com"));
 

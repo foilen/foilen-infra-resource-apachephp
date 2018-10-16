@@ -21,21 +21,22 @@ public class ApachePhpFolder extends AbstractIPResource {
     public static final String RESOURCE_TYPE = "Apache and PHP - Folder";
 
     public static final String PROPERTY_UID = "uid";
-    public static final String PROPERTY_FOLDER = "folder";
+    public static final String PROPERTY_BASE_PATH = "basePath";
+    public static final String PROPERTY_RELATIVE_PATH = "relativePath";
     public static final String PROPERTY_ALIAS = "alias";
 
     // Details
-    private String uid;
-    private String folder;
+    private String uid = SecureRandomTools.randomBase64String(10);
+    private String basePath;
+    private String relativePath = "/";
     private String alias;
 
     public ApachePhpFolder() {
-        uid = SecureRandomTools.randomBase64String(10);
     }
 
-    public ApachePhpFolder(String folder, String alias) {
-        uid = SecureRandomTools.randomBase64String(10);
-        this.folder = folder;
+    public ApachePhpFolder(String basePath, String relativePath, String alias) {
+        this.basePath = basePath;
+        this.relativePath = relativePath;
         this.alias = alias;
     }
 
@@ -43,8 +44,12 @@ public class ApachePhpFolder extends AbstractIPResource {
         return alias;
     }
 
-    public String getFolder() {
-        return folder;
+    public String getBasePath() {
+        return basePath;
+    }
+
+    public String getRelativePath() {
+        return relativePath;
     }
 
     @Override
@@ -54,7 +59,7 @@ public class ApachePhpFolder extends AbstractIPResource {
 
     @Override
     public String getResourceDescription() {
-        return folder + " -> " + alias;
+        return basePath + " : " + relativePath + " -> " + alias;
     }
 
     @Override
@@ -70,8 +75,12 @@ public class ApachePhpFolder extends AbstractIPResource {
         this.alias = alias;
     }
 
-    public void setFolder(String folder) {
-        this.folder = folder;
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
+    }
+
+    public void setRelativePath(String relativePath) {
+        this.relativePath = relativePath;
     }
 
     public void setUid(String uid) {

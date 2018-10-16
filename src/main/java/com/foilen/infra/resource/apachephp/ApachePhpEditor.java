@@ -48,6 +48,11 @@ public class ApachePhpEditor extends SimpleResourceEditor<ApachePhp> {
             });
             fieldConfig.addValidator(CommonValidation::validateNotNullOrEmpty);
         });
+        simpleResourceEditorDefinition.addInputText(ApachePhp.PROPERTY_MAIN_SITE_RELATIVE_PATH, fieldConfig -> {
+            fieldConfig.addFormator(CommonFormatting::trimSpacesAround);
+            fieldConfig.addFormator(DirectoryTools::cleanupDots);
+            fieldConfig.addValidator(CommonValidation::validateNotNullOrEmpty);
+        });
 
         simpleResourceEditorDefinition.addResource("unixUser", LinkTypeConstants.RUN_AS, UnixUser.class);
         simpleResourceEditorDefinition.addReverseResources("websitesFrom", Website.class, LinkTypeConstants.POINTS_TO);

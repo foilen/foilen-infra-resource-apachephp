@@ -104,13 +104,22 @@ public class ApachePhpEventHandler extends AbstractFinalStateManagedResourcesEve
             Map<String, Object> model = new HashMap<>();
             applicationDefinition.addVolume(new IPApplicationDefinitionVolume(apachePhp.getBasePath(), "/base"));
             model.put("baseFolder", "/base");
+            model.put("mainSiteRelativePath", sanitisePath(apachePhp.getMainSiteRelativePath(), true, true));
 
-            List<ApachePhpFolder> containerFolders = folders.stream() //
-                    .map(it -> new ApachePhpFolder("/folders/" + it.getFolder().replaceAll("\\/", "_"), it.getAlias())) //
+            List<Map<String, String>> containerFolders = folders.stream() //
+                    .map(it -> {
+                        Map<String, String> alias = new HashMap<>();
+                        alias.put("alias", sanitisePath(it.getAlias(), true, false));
+                        alias.put("folder", "/folders/" + sanitisePath(it.getBasePath(), false, false).replaceAll("\\/", "_") + "/" + sanitisePath(it.getRelativePath(), false, false));
+                        return alias;
+                    }) //
                     .collect(Collectors.toList());
             model.put("aliases", containerFolders);
             for (int i = 0; i < folders.size(); ++i) {
-                applicationDefinition.addVolume(new IPApplicationDefinitionVolume(folders.get(i).getFolder(), containerFolders.get(i).getFolder()));
+                ApachePhpFolder folder = folders.get(i);
+                applicationDefinition.addVolume(new IPApplicationDefinitionVolume( //
+                        sanitisePath(folder.getBasePath(), true, true), //
+                        "/folders/" + sanitisePath(folder.getBasePath(), false, false).replaceAll("\\/", "_")));
             }
 
             assetsBundle.addAssetContent("/etc/apache2/sites-enabled/000-default.conf", FreemarkerTools.processTemplate("/com/foilen/infra/resource/apachephp/apache-http-fs.ftl", model));
@@ -154,6 +163,28 @@ public class ApachePhpEventHandler extends AbstractFinalStateManagedResourcesEve
 
         }
 
+    }
+
+    private String sanitisePath(String path, boolean startsWithSlash, boolean endsWithSlash) {
+        if (startsWithSlash) {
+            if (!path.startsWith("/")) {
+                path = "/" + path;
+            }
+        } else {
+            while (path.startsWith("/")) {
+                path = path.length() > 1 ? path.substring(1) : "";
+            }
+        }
+        if (endsWithSlash) {
+            if (!path.endsWith("/")) {
+                path = path + "/";
+            }
+        } else {
+            while (path.endsWith("/")) {
+                path = path.length() > 1 ? path.substring(0, path.length() - 1) : "";
+            }
+        }
+        return path.replaceAll("\\/\\/", "/");
     }
 
     @Override

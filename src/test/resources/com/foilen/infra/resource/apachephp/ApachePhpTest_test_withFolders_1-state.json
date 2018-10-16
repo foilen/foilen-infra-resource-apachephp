@@ -10,6 +10,9 @@
     }, {
       "type" : "RUN_AS",
       "to" : "UnixUser | myphp | /home/myphp"
+    }, {
+      "type" : "USES",
+      "to" : "ApachePhpFolder | the_uid | /home/myphp/otherphp : inside -> /other"
     } ],
     "tags" : [ ],
     "content" : {
@@ -21,6 +24,20 @@
       "resourceDescription" : "Apache and PHP application",
       "resourceEditorName" : "Apache PHP",
       "resourceName" : "myphp"
+    }
+  }, {
+    "resource" : "ApachePhpFolder | the_uid | /home/myphp/otherphp : inside -> /other",
+    "links" : [ ],
+    "tags" : [ ],
+    "content" : {
+      "alias" : "/other",
+      "basePath" : "/home/myphp/otherphp",
+      "meta" : { },
+      "relativePath" : "inside",
+      "resourceCategory" : "NET",
+      "resourceDescription" : "/home/myphp/otherphp : inside -> /other",
+      "resourceName" : "the_uid",
+      "uid" : "the_uid"
     }
   }, {
     "resource" : "Application | infra_web-h1_example_com | Web HA Proxy for h1.example.com",
@@ -174,7 +191,12 @@ sendmail_path = \"/usr/bin/msmtp -t --read-envelope-from\"
     Require all granted
   </Directory>
   
+  Alias /other /folders/home_myphp_otherphp/inside
   
+  <Directory /folders/home_myphp_otherphp/inside>
+    AllowOverride All
+    Require all granted
+  </Directory>
 
 </VirtualHost>
 "
@@ -220,6 +242,9 @@ sendmail_path = \"/usr/bin/msmtp -t --read-envelope-from\"
         "volumes" : [ {
           "containerFsFolder" : "/base",
           "hostFolder" : "/home/myphp/php"
+        }, {
+          "containerFsFolder" : "/folders/home_myphp_otherphp",
+          "hostFolder" : "/home/myphp/otherphp/"
         }, {
           "containerFsFolder" : "/var/lock/apache2",
           "groupId" : 72000,

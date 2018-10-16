@@ -12,11 +12,15 @@
       "to" : "UnixUser | myphp | /home/myphp"
     }, {
       "type" : "USES",
-      "to" : "ApachePhpFolder | the_uid | /home/myphp/other -> /other"
+      "to" : "ApachePhpFolder | the_uid_1 | /home/myphp/otherphp : inside -> other"
+    }, {
+      "type" : "USES",
+      "to" : "ApachePhpFolder | the_uid_2 | /home/myphp/otherphp : / -> /party/"
     } ],
     "tags" : [ ],
     "content" : {
-      "basePath" : "/home/myphp/www",
+      "basePath" : "/home/myphp/php",
+      "mainSiteRelativePath" : "/www/",
       "meta" : { },
       "name" : "myphp",
       "resourceCategory" : "NET",
@@ -25,17 +29,32 @@
       "resourceName" : "myphp"
     }
   }, {
-    "resource" : "ApachePhpFolder | the_uid | /home/myphp/other -> /other",
+    "resource" : "ApachePhpFolder | the_uid_1 | /home/myphp/otherphp : inside -> other",
     "links" : [ ],
     "tags" : [ ],
     "content" : {
-      "alias" : "/other",
-      "folder" : "/home/myphp/other",
+      "alias" : "other",
+      "basePath" : "/home/myphp/otherphp",
       "meta" : { },
+      "relativePath" : "inside",
       "resourceCategory" : "NET",
-      "resourceDescription" : "/home/myphp/other -> /other",
-      "resourceName" : "the_uid",
-      "uid" : "the_uid"
+      "resourceDescription" : "/home/myphp/otherphp : inside -> other",
+      "resourceName" : "the_uid_1",
+      "uid" : "the_uid_1"
+    }
+  }, {
+    "resource" : "ApachePhpFolder | the_uid_2 | /home/myphp/otherphp : / -> /party/",
+    "links" : [ ],
+    "tags" : [ ],
+    "content" : {
+      "alias" : "/party/",
+      "basePath" : "/home/myphp/otherphp",
+      "meta" : { },
+      "relativePath" : "/",
+      "resourceCategory" : "NET",
+      "resourceDescription" : "/home/myphp/otherphp : / -> /party/",
+      "resourceName" : "the_uid_2",
+      "uid" : "the_uid_2"
     }
   }, {
     "resource" : "Application | infra_web-h1_example_com | Web HA Proxy for h1.example.com",
@@ -177,21 +196,26 @@ sendmail_path = \"/usr/bin/msmtp -t --read-envelope-from\"
           }, {
             "a" : "/etc/apache2/sites-enabled/000-default.conf",
             "b" : "<VirtualHost *>
-  DocumentRoot /base
+  DocumentRoot /base/www/
   
   SetEnvIf x-forwarded-proto https HTTPS=on
   
   ErrorLog /var/log/apache2/error.log
   CustomLog /var/log/apache2/access.log combined
   
-  <Directory /base>
+  <Directory /base/www/>
     AllowOverride All
     Require all granted
   </Directory>
   
-  Alias /other /folders/_home_myphp_other
+  Alias /party /folders/home_myphp_otherphp/
+  Alias /other /folders/home_myphp_otherphp/inside
   
-  <Directory /folders/_home_myphp_other>
+  <Directory /folders/home_myphp_otherphp/>
+    AllowOverride All
+    Require all granted
+  </Directory>
+  <Directory /folders/home_myphp_otherphp/inside>
     AllowOverride All
     Require all granted
   </Directory>
@@ -239,10 +263,13 @@ sendmail_path = \"/usr/bin/msmtp -t --read-envelope-from\"
         "udpPortsExposed" : { },
         "volumes" : [ {
           "containerFsFolder" : "/base",
-          "hostFolder" : "/home/myphp/www"
+          "hostFolder" : "/home/myphp/php"
         }, {
-          "containerFsFolder" : "/folders/_home_myphp_other",
-          "hostFolder" : "/home/myphp/other"
+          "containerFsFolder" : "/folders/home_myphp_otherphp",
+          "hostFolder" : "/home/myphp/otherphp/"
+        }, {
+          "containerFsFolder" : "/folders/home_myphp_otherphp",
+          "hostFolder" : "/home/myphp/otherphp/"
         }, {
           "containerFsFolder" : "/var/lock/apache2",
           "groupId" : 72000,

@@ -14,6 +14,7 @@ import com.foilen.infra.plugin.v1.core.visual.editor.simpleresourceditor.SimpleR
 import com.foilen.infra.plugin.v1.core.visual.helper.CommonFormatting;
 import com.foilen.infra.plugin.v1.core.visual.helper.CommonValidation;
 import com.foilen.smalltools.tools.DirectoryTools;
+import com.google.common.base.Strings;
 
 public class ApachePhpFolderEditor extends SimpleResourceEditor<ApachePhpFolder> {
 
@@ -22,7 +23,20 @@ public class ApachePhpFolderEditor extends SimpleResourceEditor<ApachePhpFolder>
     @Override
     protected void getDefinition(SimpleResourceEditorDefinition simpleResourceEditorDefinition) {
 
-        simpleResourceEditorDefinition.addInputText(ApachePhpFolder.PROPERTY_FOLDER, fieldConfig -> {
+        simpleResourceEditorDefinition.addInputText(ApachePhpFolder.PROPERTY_BASE_PATH, fieldConfig -> {
+            fieldConfig.addFormator(CommonFormatting::trimSpacesAround);
+            fieldConfig.addFormator(DirectoryTools::cleanupDots);
+            fieldConfig.addFormator(path -> {
+                if (!Strings.isNullOrEmpty(path)) {
+                    if (path.charAt(0) != '/') {
+                        return "/" + path;
+                    }
+                }
+                return path;
+            });
+            fieldConfig.addValidator(CommonValidation::validateNotNullOrEmpty);
+        });
+        simpleResourceEditorDefinition.addInputText(ApachePhpFolder.PROPERTY_RELATIVE_PATH, fieldConfig -> {
             fieldConfig.addFormator(CommonFormatting::trimSpacesAround);
             fieldConfig.addFormator(DirectoryTools::cleanupDots);
             fieldConfig.addValidator(CommonValidation::validateNotNullOrEmpty);

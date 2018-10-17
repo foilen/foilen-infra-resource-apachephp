@@ -9,6 +9,7 @@
  */
 package com.foilen.infra.resource.apachephp;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ import com.foilen.infra.resource.machine.Machine;
 import com.foilen.infra.resource.unixuser.UnixUser;
 import com.foilen.infra.resource.website.Website;
 import com.foilen.smalltools.tools.FreemarkerTools;
+import com.foilen.smalltools.tools.StringTools;
 
 public class ApachePhpEventHandler extends AbstractFinalStateManagedResourcesEventHandler<ApachePhp> {
 
@@ -46,10 +48,40 @@ public class ApachePhpEventHandler extends AbstractFinalStateManagedResourcesEve
         ApachePhp apachePhp = context.getResource();
 
         // Get the links
-        List<Machine> machines = resourceService.linkFindAllByFromResourceAndLinkTypeAndToResourceClass(apachePhp, LinkTypeConstants.INSTALLED_ON, Machine.class);
-        List<UnixUser> unixUsers = resourceService.linkFindAllByFromResourceAndLinkTypeAndToResourceClass(apachePhp, LinkTypeConstants.RUN_AS, UnixUser.class);
-        List<ApachePhpFolder> folders = resourceService.linkFindAllByFromResourceAndLinkTypeAndToResourceClass(apachePhp, LinkTypeConstants.USES, ApachePhpFolder.class);
-        List<AttachablePart> attachedParts = resourceService.linkFindAllByFromResourceAndLinkTypeAndToResourceClass(apachePhp, "ATTACHED", AttachablePart.class);
+        List<Machine> machines = new ArrayList<>();
+        List<UnixUser> unixUsers = new ArrayList<>();
+        List<ApachePhpFolder> folders = new ArrayList<>();
+        List<AttachablePart> attachedParts = new ArrayList<>();
+
+        resourceService.linkFindAllByFromResource(apachePhp).stream() //
+                .sorted((a, b) -> StringTools.safeComparisonNullFirst(a.getB().getResourceName(), b.getB().getResourceName())) //
+                .forEach(link -> {
+                    switch (link.getA()) {
+                    case LinkTypeConstants.INSTALLED_ON:
+                        if (link.getB() instanceof Machine) {
+                            machines.add((Machine) link.getB());
+                        }
+                        break;
+                    case LinkTypeConstants.RUN_AS:
+                        if (link.getB() instanceof UnixUser) {
+                            unixUsers.add((UnixUser) link.getB());
+                        }
+                        break;
+                    case LinkTypeConstants.USES:
+                        if (link.getB() instanceof ApachePhpFolder) {
+                            folders.add((ApachePhpFolder) link.getB());
+                        }
+                        break;
+                    case "ATTACHED":
+                        if (link.getB() instanceof AttachablePart) {
+                            attachedParts.add((AttachablePart) link.getB());
+                        }
+                        break;
+
+                    default:
+                        break;
+                    }
+                });
 
         // Validate links
         boolean proceed = true;

@@ -16,11 +16,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.foilen.infra.plugin.v1.core.context.ChangesContext;
 import com.foilen.infra.plugin.v1.core.context.CommonServicesContext;
 import com.foilen.infra.plugin.v1.core.eventhandler.AbstractFinalStateManagedResourcesEventHandler;
 import com.foilen.infra.plugin.v1.core.eventhandler.FinalStateManagedResource;
 import com.foilen.infra.plugin.v1.core.eventhandler.FinalStateManagedResourcesUpdateEventHandlerContext;
 import com.foilen.infra.plugin.v1.core.exception.IllegalUpdateException;
+import com.foilen.infra.plugin.v1.core.exception.NoChangeNeededException;
 import com.foilen.infra.plugin.v1.core.service.IPResourceService;
 import com.foilen.infra.plugin.v1.model.base.IPApplicationDefinition;
 import com.foilen.infra.plugin.v1.model.base.IPApplicationDefinitionAssetsBundle;
@@ -39,7 +41,12 @@ import com.foilen.smalltools.tools.StringTools;
 public class ApachePhpEventHandler extends AbstractFinalStateManagedResourcesEventHandler<ApachePhp> {
 
     @Override
-    protected void commonHandlerExecute(CommonServicesContext services, FinalStateManagedResourcesUpdateEventHandlerContext<ApachePhp> context) {
+    public void checkFarLinkChanged(CommonServicesContext services, ChangesContext changes, ApachePhp resource) {
+        // NO-OP
+    }
+
+    @Override
+    protected void commonHandlerExecute(CommonServicesContext services, FinalStateManagedResourcesUpdateEventHandlerContext<ApachePhp> context) throws NoChangeNeededException {
 
         context.addManagedResourceTypes(Application.class);
 

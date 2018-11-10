@@ -138,6 +138,7 @@ public class ApachePhpEventHandler extends AbstractFinalStateManagedResourcesEve
             assetsBundle.addAssetResource("/etc/apache2/ports.conf", "/com/foilen/infra/resource/apachephp/apache-ports.conf");
             assetsBundle.addAssetResource("/apache-start.sh", "/com/foilen/infra/resource/apachephp/apache-start.sh");
             assetsBundle.addAssetResource("/etc/php5/apache2/conf.d/99-fcloud.ini", "/com/foilen/infra/resource/apachephp/php.ini");
+            assetsBundle.addAssetResource("/etc/php5/cli/conf.d/99-fcloud.ini", "/com/foilen/infra/resource/apachephp/php.ini");
 
             // Site configuration
             Map<String, Object> model = new HashMap<>();

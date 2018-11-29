@@ -34,6 +34,10 @@ public class ApachePhpEditor extends SimpleResourceEditor<ApachePhp> {
             fieldConfig.addValidator(CommonValidation::validateNotNullOrEmpty);
             fieldConfig.addValidator(CommonValidation::validateAlphaNumLower);
         });
+        simpleResourceEditorDefinition.addInputText(ApachePhp.PROPERTY_VERSION, fieldConfig -> {
+            fieldConfig.addFormator(CommonFormatting::trimSpacesAround);
+            fieldConfig.addValidator(CommonValidation::validateNotNullOrEmpty);
+        });
 
         simpleResourceEditorDefinition.addInputText(ApachePhp.PROPERTY_BASE_PATH, fieldConfig -> {
             fieldConfig.addFormator(CommonFormatting::trimSpacesAround);

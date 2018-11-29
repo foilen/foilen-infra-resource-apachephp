@@ -44,11 +44,15 @@ public class ApachePhp extends AbstractIPResource {
     public static final String PROPERTY_NAME = "name";
     public static final String PROPERTY_BASE_PATH = "basePath";
     public static final String PROPERTY_MAIN_SITE_RELATIVE_PATH = "mainSiteRelativePath";
+    public static final String PROPERTY_VERSION = "version";
 
     // Details
     private String name;
     private String basePath;
     private String mainSiteRelativePath = "/";
+
+    // Settings
+    private String version = "5.5.9-1";
 
     public String getBasePath() {
         return basePath;
@@ -77,6 +81,10 @@ public class ApachePhp extends AbstractIPResource {
         return name;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
     public void setBasePath(String basePath) {
         this.basePath = basePath;
     }
@@ -87,6 +95,10 @@ public class ApachePhp extends AbstractIPResource {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
 }

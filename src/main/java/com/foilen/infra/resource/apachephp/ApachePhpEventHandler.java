@@ -131,7 +131,7 @@ public class ApachePhpEventHandler extends AbstractFinalStateManagedResourcesEve
                 return result;
             });
 
-            applicationDefinition.setFrom("foilen/fcloud-docker-apache_php5:1.0.1");
+            applicationDefinition.setFrom("foilen/fcloud-docker-apache_php:" + apachePhp.getVersion());
 
             // Apache and PHP config
             IPApplicationDefinitionAssetsBundle assetsBundle = applicationDefinition.addAssetsBundle();

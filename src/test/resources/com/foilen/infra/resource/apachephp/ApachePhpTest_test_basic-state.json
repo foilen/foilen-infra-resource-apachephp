@@ -219,10 +219,7 @@ memory_limit = 256M
           "step" : "_assets_1/ /",
           "type" : "COPY"
         }, {
-          "step" : "chmod +x /*.sh && /copy-php-conf.sh",
-          "type" : "COMMAND"
-        }, {
-          "step" : "chmod 644 /etc/apache2/ports.conf /etc/php5/apache2/conf.d/99-fcloud.ini",
+          "step" : "chmod 644 /etc/apache2/ports.conf /99-fcloud.ini && chmod +x /*.sh && /copy-php-conf.sh",
           "type" : "COMMAND"
         }, {
           "step" : "chmod -R 777 /var/log",

@@ -173,18 +173,34 @@ while [ -e /proc/$APP_PID ]; do sleep 5; done
 echo Apache service is down
 "
           }, {
-            "a" : "/etc/php5/apache2/conf.d/99-fcloud.ini",
-            "b" : "[PHP]
-sendmail_path = \"/usr/bin/msmtp -t --read-envelope-from\"
+            "a" : "/copy-php-conf.sh",
+            "b" : "#!/bin/bash
 
-max_execution_time = 300
+set -e
 
-upload_max_filesize = 64M
-post_max_size = 128M
-memory_limit = 256M
+if [ -d /etc/php5 ]; then
+	cd /etc/php5
+	for SUB in $(ls); do
+		if [ -d $SUB/conf.d/ ]; then
+			cp /99-fcloud.ini $SUB/conf.d/
+		fi
+	done
+fi
+
+if [ -d /etc/php ]; then
+	cd /etc/php
+	for VER in $(ls); do
+		cd $VER
+		for SUB in $(ls); do
+			if [ -d $SUB/conf.d/ ]; then
+				cp /99-fcloud.ini $SUB/conf.d/
+			fi
+		done
+	done
+fi
 "
           }, {
-            "a" : "/etc/php5/cli/conf.d/99-fcloud.ini",
+            "a" : "/99-fcloud.ini",
             "b" : "[PHP]
 sendmail_path = \"/usr/bin/msmtp -t --read-envelope-from\"
 
@@ -225,7 +241,10 @@ memory_limit = 256M
           "step" : "_assets_1/ /",
           "type" : "COPY"
         }, {
-          "step" : "chmod 644 /etc/apache2/ports.conf /etc/php5/apache2/conf.d/99-fcloud.ini ; chmod 755 /apache-start.sh",
+          "step" : "chmod +x /*.sh && /copy-php-conf.sh",
+          "type" : "COMMAND"
+        }, {
+          "step" : "chmod 644 /etc/apache2/ports.conf /etc/php5/apache2/conf.d/99-fcloud.ini",
           "type" : "COMMAND"
         }, {
           "step" : "chmod -R 777 /var/log",

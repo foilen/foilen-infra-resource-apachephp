@@ -137,8 +137,9 @@ public class ApachePhpEventHandler extends AbstractFinalStateManagedResourcesEve
             IPApplicationDefinitionAssetsBundle assetsBundle = applicationDefinition.addAssetsBundle();
             assetsBundle.addAssetResource("/etc/apache2/ports.conf", "/com/foilen/infra/resource/apachephp/apache-ports.conf");
             assetsBundle.addAssetResource("/apache-start.sh", "/com/foilen/infra/resource/apachephp/apache-start.sh");
-            assetsBundle.addAssetResource("/etc/php5/apache2/conf.d/99-fcloud.ini", "/com/foilen/infra/resource/apachephp/php.ini");
-            assetsBundle.addAssetResource("/etc/php5/cli/conf.d/99-fcloud.ini", "/com/foilen/infra/resource/apachephp/php.ini");
+            assetsBundle.addAssetResource("/copy-php-conf.sh", "/com/foilen/infra/resource/apachephp/copy-php-conf.sh");
+            assetsBundle.addAssetResource("/99-fcloud.ini", "/com/foilen/infra/resource/apachephp/php.ini");
+            applicationDefinition.addBuildStepCommand("chmod +x /*.sh && /copy-php-conf.sh");
 
             // Site configuration
             Map<String, Object> model = new HashMap<>();
@@ -164,7 +165,7 @@ public class ApachePhpEventHandler extends AbstractFinalStateManagedResourcesEve
 
             assetsBundle.addAssetContent("/etc/apache2/sites-enabled/000-default.conf", FreemarkerTools.processTemplate("/com/foilen/infra/resource/apachephp/apache-http-fs.ftl", model));
 
-            applicationDefinition.addBuildStepCommand("chmod 644 /etc/apache2/ports.conf /etc/php5/apache2/conf.d/99-fcloud.ini ; chmod 755 /apache-start.sh");
+            applicationDefinition.addBuildStepCommand("chmod 644 /etc/apache2/ports.conf /etc/php5/apache2/conf.d/99-fcloud.ini");
 
             applicationDefinition.addVolume(new IPApplicationDefinitionVolume(null, "/var/lock/apache2", unixUserId, unixUserId, "755"));
 

@@ -41,12 +41,12 @@ dependencies {
   compileOnly "com.foilen:foilen-infra-system-core-system-fake:$foilenInfraSystemVersion"
 
   compileOnly "com.foilen:foilen-infra-resource-application:0.1.2"
-  compileOnly "com.foilen:foilen-infra-resource-composableapplication:0.2.2"
+  compileOnly "com.foilen:foilen-infra-resource-composableapplication:0.2.4"
   compileOnly "com.foilen:foilen-infra-resource-dns:0.1.7"
   compileOnly "com.foilen:foilen-infra-resource-machine:0.1.1"
   compileOnly "com.foilen:foilen-infra-resource-unixuser:0.1.6"
   compileOnly "com.foilen:foilen-infra-resource-webcertificate:0.1.2"
-  compileOnly "com.foilen:foilen-infra-resource-website:0.1.9"
+  compileOnly "com.foilen:foilen-infra-resource-website:0.1.10"
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
